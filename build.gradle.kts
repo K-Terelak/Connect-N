@@ -1,9 +1,7 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
-
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.compose")
+    kotlin("plugin.serialization")
     id("org.jetbrains.compose")
 }
 
@@ -15,7 +13,12 @@ repositories {
 
 kotlin {
     js(IR) {
-        browser()
+        browser {
+            commonWebpackConfig {
+                outputFileName = "connect-n.js"
+                cssSupport { enabled.set(true) }
+            }
+        }
         binaries.executable()
     }
     sourceSets {
@@ -26,6 +29,13 @@ kotlin {
             dependencies {
                 implementation(compose.html.core)
                 implementation(compose.runtime)
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+            }
+        }
+        val jsTest by getting {
+            kotlin.srcDir("src/test/kotlin")
+            dependencies {
+                implementation(kotlin("test"))
             }
         }
     }
