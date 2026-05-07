@@ -1,28 +1,22 @@
-import androidx.compose.runtime.*
-import org.jetbrains.compose.web.dom.Button
 import org.jetbrains.compose.web.dom.Div
-import org.jetbrains.compose.web.dom.Text
 import org.jetbrains.compose.web.renderComposable
+import ui.GameViewModel
+import ui.composables.ConfigPanel
+import ui.composables.DropArrows
+import ui.composables.GameBoard
+import ui.composables.ScoreBar
+import ui.composables.StatusBar
 
 fun main() {
-    renderComposable(rootElementId = "root") {
-        Body()
-    }
-}
+    val viewModel = GameViewModel()
 
-@Composable
-fun Body() {
-    var counter by remember { mutableStateOf(0) }
-    Div {
-        Text("Clicked: ${counter}")
-    }
-    Button(
-        attrs = {
-            onClick { _ ->
-                counter++
-            }
+    renderComposable(rootElementId = "root") {
+        Div(attrs = { classes("app") }) {
+            ConfigPanel(viewModel)
+            StatusBar(viewModel)
+            ScoreBar(viewModel)
+            DropArrows(viewModel)
+            GameBoard(viewModel)
         }
-    ) {
-        Text("Click")
     }
 }

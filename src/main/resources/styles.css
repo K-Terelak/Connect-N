@@ -1,0 +1,225 @@
+:root {
+  --bg: #111;
+  --panel: #222;
+  --p1: #e8365d;
+  --p2: #00ccdd;
+  --cell-empty: #1a1a1a;
+  --text: #fff;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 8px;
+  overflow-x: hidden;
+}
+
+.config-panel {
+  background: var(--panel);
+  border: 1px solid #333;
+  padding: 10px 14px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 680px;
+}
+
+.config-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.btn-step {
+  background: #333;
+  border: 1px solid #444;
+  color: var(--text);
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-step:hover { background: #444; }
+
+.btn-new {
+  background: transparent;
+  border: 1px solid var(--p1);
+  color: var(--p1);
+  padding: 6px 14px;
+  cursor: pointer;
+}
+
+.btn-new:hover { background: var(--p1); color: #000; }
+
+.status-bar {
+  width: 100%;
+  max-width: 680px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  padding: 8px 12px;
+  background: var(--panel);
+  border: 1px solid #333;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.player-indicator {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  text-align: center;
+}
+
+.piece-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  opacity: 0.4;
+}
+.piece-dot.p1 { background: var(--p1); }
+.piece-dot.p2 { background: var(--p2); }
+.piece-dot.active { opacity: 1; }
+
+.status-msg {
+  flex: 1;
+  text-align: center;
+}
+.status-msg.p1-win { color: var(--p1); }
+.status-msg.p2-win { color: var(--p2); }
+.status-msg.draw { color: #f0c040; }
+
+.score-bar {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 8px;
+  color: #aaa;
+  text-align: center;
+}
+.score-bar .s1 span { color: var(--p1); }
+.score-bar .s2 span { color: var(--p2); }
+.score-bar .sd span { color: #f0c040; }
+
+.drop-arrows {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 3px;
+  height: 16px;
+  padding: 0 5px;
+}
+
+.drop-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent;
+}
+.drop-arrow.active-p1 { color: var(--p1); }
+.drop-arrow.active-p2 { color: var(--p2); }
+
+.config-panel,
+.status-bar,
+.score-bar,
+.drop-arrows,
+.game-wrapper {
+  width: min(70vw, 680px);
+}
+
+.game-wrapper {
+  position: relative;
+  display: block;
+}
+
+.board {
+  display: grid;
+  gap: 4px;
+  padding: 6px;
+  background: #0a0a0a;
+  border: 1px solid #333;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  grid-auto-rows: 1fr;
+}
+
+.cell {
+  aspect-ratio: 1;
+  width: 100%;
+  min-width: 0;
+  border-radius: 50%;
+  background: var(--cell-empty);
+}
+.cell.p1 { background: var(--p1); }
+.cell.p2 { background: var(--p2); }
+
+.cell.win-cell {
+  animation: winPulse 0.4s infinite alternate;
+}
+
+@keyframes winPulse {
+  from { opacity: 1; }
+  to { opacity: 0.6; }
+}
+
+@keyframes fall {
+  from {
+    transform: translateY(calc(-1 * var(--fall-rows, 1) * (100% + 4px)));
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.falling-overlay {
+  position: absolute;
+  inset: 1px;
+  display: grid;
+  gap: 4px;
+  padding: 6px;
+  pointer-events: none;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.falling-piece {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: fall var(--fall-duration, 300ms) linear forwards;
+}
+.falling-piece.p1 { background: var(--p1); }
+.falling-piece.p2 { background: var(--p2); }
+
+.col-zones {
+  position: absolute;
+  inset: 1px;
+  display: grid;
+  padding: 6px;
+  z-index: 5;
+}
+.col-zone { cursor: pointer; }
+.col-zone:hover { background: rgba(255,255,255,0.03); }
+
+@media (max-width: 400px) {
+  body { padding: 8px 4px; }
+  .config-panel { padding: 8px 10px; gap: 8px; }
+  .status-bar { padding: 6px 8px; }
+}
